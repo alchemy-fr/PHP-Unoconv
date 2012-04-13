@@ -1,0 +1,6 @@
+/nbproject
+composer.lock
+composer.phar
+/docs/build
+/vendor
+
