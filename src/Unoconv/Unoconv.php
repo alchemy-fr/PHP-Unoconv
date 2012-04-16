@@ -68,7 +68,7 @@ class Unoconv
             throw new Exception\RuntimeException('Unable to execute unoconv');
         }
 
-        if ( ! file_put_contents($pathfile, $process->getOutput()))
+        if ( ! is_writable(dirname($pathfile)) || ! file_put_contents($pathfile, $process->getOutput()))
         {
             throw new Exception\RuntimeException('Unable write output file');
         }
