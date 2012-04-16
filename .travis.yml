@@ -2,7 +2,7 @@ language: php
 
 before_script:
   - sudo apt-get update
-  - sudo apt-get install -y unoconv
+  - sudo apt-get install -y openoffice.org oppenoffice.org-writer unoconv
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
 

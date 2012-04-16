@@ -3,4 +3,5 @@ composer.lock
 composer.phar
 /docs/build
 /vendor
+/tests/phpunit_report
 
