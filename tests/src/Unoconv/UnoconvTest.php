@@ -60,7 +60,7 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
      */
     public function testSaveAsInvalidDest()
     {
-        $dest = '/tmp/'.  mt_rand(10000, 99999).'/Hello.pdf';
+        $dest = '/tmp/' . mt_rand(10000, 99999) . '/Hello.pdf';
 
         $Unoconv = new Unoconv('unoconv');
         $Unoconv->open(__DIR__ . '/../../files/Hello.odt');
