@@ -44,14 +44,18 @@ class Unoconv
         $this->pathfile = $pathfile;
     }
 
-    public function saveAs($format, $pathfile)
+    public function saveAs($format, $pathfile, $pageRange = null)
     {
         if ( ! $this->pathfile)
         {
             throw new Exception\LogicException('No file open');
         }
 
-        $cmd = sprintf('%s --format=%s --stdout %s', $this->binary, escapeshellarg($format), escapeshellarg($this->pathfile));
+        $pageRangeOpt = preg_match('/\d+-\d+/', $pageRange) ? (' -e PageRange=' . $pageRange) : '';
+
+        $cmd = sprintf(
+          '%s --format=%s %s --stdout %s', $this->binary, escapeshellarg($format), $pageRangeOpt, escapeshellarg($this->pathfile)
+        );
 
         try
         {
