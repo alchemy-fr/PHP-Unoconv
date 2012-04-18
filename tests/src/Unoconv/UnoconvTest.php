@@ -47,11 +47,26 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
         $dest = __DIR__ . '/../../files/Hello.pdf';
 
         $Unoconv = new Unoconv('unoconv');
-        $Unoconv->open(__DIR__ . '/../../files/Hello.odt');
-        $Unoconv->saveAs('pdf', $dest);
+        $Unoconv->open(__DIR__ . '/../../files/Hello.odt')
+          ->saveAs('pdf', $dest)
+          ->close();
 
         $this->assertTrue(file_exists($dest));
         unlink($dest);
+    }
+
+    /**
+     * @covers Unoconv\Unoconv::close
+     * @expectedException Unoconv\Exception\LogicException
+     */
+    public function testClose()
+    {
+        $dest = __DIR__ . '/../../files/Hello.pdf';
+
+        $Unoconv = new Unoconv('unoconv');
+        $Unoconv->open(__DIR__ . '/../../files/Hello.odt')
+          ->close()
+          ->saveAs('pdf', $dest);
     }
 
     /**

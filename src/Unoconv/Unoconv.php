@@ -42,6 +42,8 @@ class Unoconv
         $this->logger->addInfo(sprintf('Unoconv opens %s', $pathfile));
 
         $this->pathfile = $pathfile;
+
+        return $this;
     }
 
     public function saveAs($format, $pathfile, $pageRange = null)
@@ -77,7 +79,14 @@ class Unoconv
             throw new Exception\RuntimeException('Unable write output file');
         }
 
-        return true;
+        return $this;
+    }
+
+    public function close()
+    {
+        $this->pathfile = null;
+
+        return $this;
     }
 
     public static function load(\Monolog\Logger $logger = null)
