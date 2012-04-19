@@ -17,6 +17,8 @@ class Unoconv
      */
     protected $logger;
 
+    const FORMAT_PDF = 'pdf';
+
     public function __construct($binary, \Monolog\Logger $logger = null)
     {
         $this->binary = $binary;
