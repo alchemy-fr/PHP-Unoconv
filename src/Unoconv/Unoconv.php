@@ -97,7 +97,7 @@ class Unoconv
 
         if (null === $binary = $finder->find('unoconv'))
         {
-            throw new Exception\BinaryNotFoundException('Binary not found');
+            throw new Exception\RuntimeException('Binary not found');
         }
 
         return new static($binary, $logger);
