@@ -1,12 +1,14 @@
 language: php
 
+services: []
+
 before_script:
   - sudo apt-get update
   - sudo apt-get install -y openoffice.org openoffice.org-writer unoconv
   - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install
+  - php composer.phar install --dev
 
 php:
-  - 5.3.2
+  - 5.3.3
   - 5.3
   - 5.4
