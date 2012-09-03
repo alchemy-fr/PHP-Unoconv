@@ -1,9 +1,23 @@
 <?php
 
+/*
+ * This file is part of PHP-Unoconv.
+ *
+ * (c) Alchemy <info@alchemy.fr>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Unoconv;
 
+use Logger;
+use Monolog\Handler\NullHandler;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
+use Unoconv\Exception\InvalidFileArgumentException;
+use Unoconv\Exception\LogicException;
+use Unoconv\Exception\RuntimeException;
 
 class Unoconv
 {
@@ -19,14 +33,14 @@ class Unoconv
 
     const FORMAT_PDF = 'pdf';
 
-    public function __construct($binary, \Monolog\Logger $logger = null)
+    public function __construct($binary, Logger $logger = null)
     {
         $this->binary = $binary;
 
         if ( ! $logger)
         {
-            $logger = new \Monolog\Logger('default');
-            $logger->pushHandler(new \Monolog\Handler\NullHandler());
+            $logger = new Logger('default');
+            $logger->pushHandler(new NullHandler());
         }
 
         $this->logger = $logger;
@@ -38,7 +52,7 @@ class Unoconv
         {
             $this->logger->addError(sprintf('Request to open %s failed', $pathfile));
 
-            throw new Exception\InvalidFileArgumentException(sprintf('File %s does not exists', $pathfile));
+            throw new InvalidFileArgumentException(sprintf('File %s does not exists', $pathfile));
         }
 
         $this->logger->addInfo(sprintf('Unoconv opens %s', $pathfile));
@@ -52,7 +66,7 @@ class Unoconv
     {
         if ( ! $this->pathfile)
         {
-            throw new Exception\LogicException('No file open');
+            throw new LogicException('No file open');
         }
 
         $pageRangeOpt = preg_match('/\d+-\d+/', $pageRange) ? (' -e PageRange=' . $pageRange) : '';
@@ -61,6 +75,8 @@ class Unoconv
           '%s --format=%s %s --stdout %s', $this->binary, escapeshellarg($format), $pageRangeOpt, escapeshellarg($this->pathfile)
         );
 
+        $this->logger->addInfo(sprintf('executing command %s', $cmd));
+
         try
         {
             $process = new Process($cmd);
@@ -68,17 +84,17 @@ class Unoconv
         }
         catch (\RuntimeException $e)
         {
-            throw new Exception\RuntimeException('Unable to execute unoconv');
+            throw new RuntimeException('Unable to execute unoconv');
         }
 
         if ( ! $process->isSuccessful())
         {
-            throw new Exception\RuntimeException('Unable to execute unoconv');
+            throw new RuntimeException('Unable to execute unoconv');
         }
 
         if ( ! is_writable(dirname($pathfile)) || ! file_put_contents($pathfile, $process->getOutput()))
         {
-            throw new Exception\RuntimeException('Unable write output file');
+            throw new RuntimeException('Unable write output file');
         }
 
         return $this;
@@ -91,13 +107,13 @@ class Unoconv
         return $this;
     }
 
-    public static function load(\Monolog\Logger $logger = null)
+    public static function load(Logger $logger = null)
     {
         $finder = new ExecutableFinder();
 
         if (null === $binary = $finder->find('unoconv'))
         {
-            throw new Exception\RuntimeException('Binary not found');
+            throw new RuntimeException('Binary not found');
         }
 
         return new static($binary, $logger);
