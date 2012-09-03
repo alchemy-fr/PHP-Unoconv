@@ -21,6 +21,11 @@
         "symfony/process": ">2.0",
         "monolog/monolog": "1.0.*"
     },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "silex/silex": "dev-master",
+        "fabpot/php-cs-fixer": "dev-master"
+    },
     "autoload": {
         "psr-0": {
             "Unoconv": "src"
