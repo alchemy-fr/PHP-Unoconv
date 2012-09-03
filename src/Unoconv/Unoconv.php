@@ -11,7 +11,7 @@
 
 namespace Unoconv;
 
-use Logger;
+use Monolog\Logger;
 use Monolog\Handler\NullHandler;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
