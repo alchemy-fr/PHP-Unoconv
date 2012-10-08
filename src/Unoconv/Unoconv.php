@@ -93,7 +93,7 @@ class Unoconv
         }
 
         if (!is_writable(dirname($pathfile)) || !file_put_contents($pathfile, $process->getOutput())) {
-            throw new RuntimeException('Unable write output file');
+            throw new RuntimeException(sprintf('Unable to write to output file `%s`', $pathfile));
         }
 
         return $this;
