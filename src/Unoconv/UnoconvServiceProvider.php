@@ -24,6 +24,12 @@ class UnoconvServiceProvider implements ServiceProviderInterface
         $app['unoconv.binary'] = null;
         $app['unoconv.logger'] = null;
 
+        if (isset($app['monolog'])) {
+            $app['unoconv.logger'] = function() use ($app) {
+                return $app['monolog'];
+            };
+        }
+
         $app['unoconv'] = $app->share(function(Application $app) {
 
             if ($app['unoconv.logger']) {
@@ -35,7 +41,7 @@ class UnoconvServiceProvider implements ServiceProviderInterface
                 $logger->pushHandler(new NullHandler());
             }
 
-            if ( ! $app['unoconv.binary']) {
+            if (!$app['unoconv.binary']) {
                 return Unoconv::load($logger);
             } else {
                 return new Unoconv($app['unoconv.binary'], $logger);

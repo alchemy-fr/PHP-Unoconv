@@ -13,7 +13,7 @@ namespace Unoconv;
 
 use Monolog\Logger;
 use Monolog\Handler\NullHandler;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Process\ExecutableFinder;
 use Unoconv\Exception\InvalidFileArgumentException;
 use Unoconv\Exception\LogicException;
@@ -69,16 +69,20 @@ class Unoconv
             throw new LogicException('No file open');
         }
 
-        $pageRangeOpt = preg_match('/\d+-\d+/', $pageRange) ? (' -e PageRange=' . $pageRange) : '';
+        $builder = ProcessBuilder::create(array(
+            $this->binary, '--format=' . $format,
+        ));
 
-        $cmd = sprintf(
-            '%s --format=%s %s --stdout %s', $this->binary, escapeshellarg($format), $pageRangeOpt, escapeshellarg($this->pathfile)
-        );
+        if (preg_match('/\d+-\d+/', $pageRange)) {
+            $builder->add('-e')->add('PageRange=' . $pageRange);
+        }
 
-        $this->logger->addInfo(sprintf('executing command %s', $cmd));
+        $builder->add($this->pathfile);
+        $process = $builder->getProcess();
+
+        $this->logger->addInfo(sprintf('executing command %s', $process->getCommandline()));
 
         try {
-            $process = new Process($cmd);
             $process->run();
         } catch (\RuntimeException $e) {
             throw new RuntimeException('Unable to execute unoconv');
