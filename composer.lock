@@ -51,18 +51,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process",
-                "reference": "2965a0340c138d7b47e74ed6c44402d946f0bbd2"
+                "reference": "fc5b082e436161427e29652e3316d7def5f7a64f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Process/zipball/2965a0340c138d7b47e74ed6c44402d946f0bbd2",
-                "reference": "2965a0340c138d7b47e74ed6c44402d946f0bbd2",
+                "url": "https://github.com/symfony/Process/zipball/fc5b082e436161427e29652e3316d7def5f7a64f",
+                "reference": "fc5b082e436161427e29652e3316d7def5f7a64f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1349363877",
+            "time": "1349553363",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -461,18 +461,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation",
-                "reference": "64fe72c44346dc6ee0a51075e7722ee0af1388ca"
+                "reference": "5f18e1d5b901b320d05230aa91934e7d81f64bb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/HttpFoundation/zipball/64fe72c44346dc6ee0a51075e7722ee0af1388ca",
-                "reference": "64fe72c44346dc6ee0a51075e7722ee0af1388ca",
+                "url": "https://github.com/symfony/HttpFoundation/zipball/5f18e1d5b901b320d05230aa91934e7d81f64bb4",
+                "reference": "5f18e1d5b901b320d05230aa91934e7d81f64bb4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1349363877",
+            "time": "1349553277",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -509,12 +509,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpKernel",
-                "reference": "970a66bcaca90d160b3cc920c87c275147a7142b"
+                "reference": "676a7bb2c6c4d5669ca073cceae3ac393748752a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/HttpKernel/zipball/970a66bcaca90d160b3cc920c87c275147a7142b",
-                "reference": "970a66bcaca90d160b3cc920c87c275147a7142b",
+                "url": "https://github.com/symfony/HttpKernel/zipball/676a7bb2c6c4d5669ca073cceae3ac393748752a",
+                "reference": "676a7bb2c6c4d5669ca073cceae3ac393748752a",
                 "shasum": ""
             },
             "require": {
@@ -540,7 +540,7 @@
                 "symfony/dependency-injection": "2.1.*",
                 "symfony/finder": "2.1.*"
             },
-            "time": "1349363877",
+            "time": "1349553277",
             "type": "library",
             "extra": {
                 "branch-alias": {
