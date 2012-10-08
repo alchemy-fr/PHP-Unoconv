@@ -70,7 +70,7 @@ class Unoconv
         }
 
         $builder = ProcessBuilder::create(array(
-            $this->binary, '--format=' . $format,
+            $this->binary, '--format=' . $format, '--stdout'
         ));
 
         if (preg_match('/\d+-\d+/', $pageRange)) {
