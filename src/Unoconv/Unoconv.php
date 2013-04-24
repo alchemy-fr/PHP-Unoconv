@@ -11,109 +11,59 @@
 
 namespace Unoconv;
 
-use Monolog\Logger;
-use Monolog\Handler\NullHandler;
-use Symfony\Component\Process\ProcessBuilder;
-use Symfony\Component\Process\ExecutableFinder;
-use Unoconv\Exception\InvalidFileArgumentException;
-use Unoconv\Exception\LogicException;
+use Alchemy\BinaryDriver\AbstractBinary;
+use Psr\Log\LoggerInterface;
 use Unoconv\Exception\RuntimeException;
+use Unoconv\Exception\InvalidFileArgumentException;
 
-class Unoconv
+class Unoconv extends AbstractBinary
 {
-    protected $pathfile;
-    protected $binary;
-
-    /**
-     *
-     * @var \Monolog\Logger
-     */
-    protected $logger;
-
     const FORMAT_PDF = 'pdf';
 
-    public function __construct($binary, Logger $logger = null)
+    public function transcode($input, $format, $output, $pageRange = null)
     {
-        if (!is_executable($binary)) {
-            throw new RuntimeException(sprintf('`%s` is not executable', $binary));
+        if (!file_exists($input)) {
+            $this->logger->error(sprintf('RUnoconv failed to open %s', $input));
+            throw new InvalidFileArgumentException(sprintf('File %s does not exists', $input));
         }
 
-        $this->binary = $binary;
-
-        if (!$logger) {
-            $logger = new Logger('default');
-            $logger->pushHandler(new NullHandler());
-        }
-
-        $this->logger = $logger;
-    }
-
-    public function open($pathfile)
-    {
-        if (!file_exists($pathfile)) {
-            $this->logger->addError(sprintf('Request to open %s failed', $pathfile));
-
-            throw new InvalidFileArgumentException(sprintf('File %s does not exists', $pathfile));
-        }
-
-        $this->logger->addInfo(sprintf('Unoconv opens %s', $pathfile));
-
-        $this->pathfile = $pathfile;
-
-        return $this;
-    }
-
-    public function saveAs($format, $pathfile, $pageRange = null)
-    {
-        if (!$this->pathfile) {
-            throw new LogicException('No file open');
-        }
-
-        $builder = ProcessBuilder::create(array(
-            $this->binary, '--format=' . $format, '--stdout'
-        ));
+        $arguments = array(
+            '--format=' . $format,
+            '--stdout'
+        );
 
         if (preg_match('/\d+-\d+/', $pageRange)) {
-            $builder->add('-e')->add('PageRange=' . $pageRange);
+            $arguments[] = '-e';
+            $arguments[] = 'PageRange=' . $pageRange;
         }
 
-        $builder->add($this->pathfile);
-        $process = $builder->getProcess();
+        $arguments[] = $input;
 
-        $this->logger->addInfo(sprintf('executing command %s', $process->getCommandline()));
+        $process = $this->factory->create($arguments);
+
+        $this->logger->info(sprintf('Executing unoconv command %s', $process->getCommandline()));
 
         try {
             $process->run();
         } catch (\RuntimeException $e) {
-            throw new RuntimeException('Unable to execute unoconv');
+            throw new RuntimeException('Unable to execute unoconv command', $e->getCode(), $e);
         }
 
         if (!$process->isSuccessful()) {
-            throw new RuntimeException('Unable to execute unoconv');
+            throw new RuntimeException(sprintf(
+                'Unable to execute unoconv, command %s failed', $process->getCommandLine()
+            ));
         }
 
-        if (!is_writable(dirname($pathfile)) || !file_put_contents($pathfile, $process->getOutput())) {
-            throw new RuntimeException(sprintf('Unable to write to output file `%s`', $pathfile));
+        if (!is_writable(dirname($output)) || !file_put_contents($output, $process->getOutput())) {
+            throw new RuntimeException(sprintf('Unable to write to output file `%s`', $output));
         }
 
         return $this;
     }
 
-    public function close()
+    public static function create(LoggerInterface $logger = null, $conf = array())
     {
-        $this->pathfile = null;
-
-        return $this;
-    }
-
-    public static function load(Logger $logger = null)
-    {
-        $finder = new ExecutableFinder();
-
-        if (null === $binary = $finder->find('unoconv')) {
-            throw new RuntimeException('Binary not found');
-        }
-
-        return new static($binary, $logger);
+        return static::load('unoconv', $logger, $conf);
     }
 }

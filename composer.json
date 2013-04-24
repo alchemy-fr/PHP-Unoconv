@@ -17,12 +17,13 @@
         }
     ],
     "require": {
-        "php"             : ">=5.3.3",
-        "symfony/process" : "~2.0",
-        "monolog/monolog" : "~1.0"
+        "php"                   : ">=5.3.3",
+        "alchemy/binary-driver" : "~1.3",
+        "symfony/process"       : "~2.0",
+        "monolog/monolog"       : "~1.0"
     },
     "require-dev": {
-        "silex/silex"     : "1.0.x-dev@dev"
+        "silex/silex"           : "1.0.x-dev@dev"
     },
     "autoload": {
         "psr-0": {

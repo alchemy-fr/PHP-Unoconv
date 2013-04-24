@@ -11,46 +11,34 @@
 
 namespace Unoconv;
 
-use Monolog\Logger;
-use Monolog\Handler\NullHandler;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
 class UnoconvServiceProvider implements ServiceProviderInterface
 {
-
     public function register(Application $app)
     {
         $app['unoconv.binary'] = null;
         $app['unoconv.logger'] = null;
-
-        if (isset($app['monolog'])) {
-            $app['unoconv.logger'] = function() use ($app) {
-                return $app['monolog'];
-            };
-        }
+        $app['unoconv.timeout'] = 0;
 
         $app['unoconv'] = $app->share(function(Application $app) {
 
             if ($app['unoconv.logger']) {
                 $logger = $app['unoconv.logger'];
-            } elseif (isset($app['monolog'])) {
-                $logger = $app['monolog'];
             } else {
-                $logger = new Logger('unoconv');
-                $logger->pushHandler(new NullHandler());
+                $logger = null;
             }
 
-            if (!$app['unoconv.binary']) {
-                return Unoconv::load($logger);
+            if (null === $app['unoconv.binary']) {
+                return Unoconv::create($logger, array('timeout' => $app['unoconv.timeout']));
             } else {
-                return new Unoconv($app['unoconv.binary'], $logger);
+                return Unoconv::load($app['unoconv.binary'], $logger, array('timeout' => $app['unoconv.timeout']));
             }
         });
     }
 
     public function boot(Application $app)
     {
-
     }
 }
