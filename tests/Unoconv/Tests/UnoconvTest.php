@@ -1,9 +1,8 @@
 <?php
 
-namespace Unoconv;
+namespace Unoconv\Tests;
 
-require_once dirname(__FILE__) . '/../../../src/Unoconv/Unoconv.php';
-
+use Unoconv\Unoconv;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
 

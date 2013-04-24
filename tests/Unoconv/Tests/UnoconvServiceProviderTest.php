@@ -1,7 +1,8 @@
 <?php
 
-namespace Unoconv;
+namespace Unoconv\Tests;
 
+use Unoconv\UnoconvServiceProvider;
 use Silex\Application;
 use Symfony\Component\Process\ExecutableFinder;
 
