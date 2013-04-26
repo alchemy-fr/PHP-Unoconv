@@ -1,7 +1,7 @@
 CHANGELOG
 ---------
 
-* 0.2.0 (xx-xx-2013)
+* 0.2.0 (04-26-2013)
 
   * Use alchemy/binary-driver as base for driver
   * Split unit tests and functional tests
