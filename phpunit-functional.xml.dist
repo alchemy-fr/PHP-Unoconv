@@ -16,8 +16,8 @@
     </php>
 
     <testsuites>
-        <testsuite name="Unoconv Tests Suite">
-            <directory>tests/Unoconv/Tests</directory>
+        <testsuite name="Unoconv Functional Tests Suite">
+            <directory>tests/Unoconv/Functional</directory>
         </testsuite>
     </testsuites>
     <filter>
