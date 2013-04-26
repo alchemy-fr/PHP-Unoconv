@@ -2,11 +2,12 @@
 
 namespace Unoconv\Tests;
 
+use Alchemy\BinaryDriver\BinaryDriverTestCase;
 use Unoconv\Unoconv;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
 
-class UnoconvTest extends \PHPUnit_Framework_TestCase
+class UnoconvTest extends BinaryDriverTestCase
 {
     public function testCreate()
     {
@@ -30,7 +31,7 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Unable to detect unoconv, mandatory for this test');
         }
 
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createLoggerMock();
 
         $unoconv = Unoconv::create($logger);
         $this->assertEquals($logger, $unoconv->getLogger());
@@ -45,7 +46,7 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Unable to detect unoconv, mandatory for this test');
         }
 
-        $conf = $this->getMock('Alchemy\BinaryDriver\ConfigurationInterface');
+        $conf = $this->createConfigurationMock();
 
         $unoconv = Unoconv::create(null, $conf);
         $this->assertEquals($conf, $unoconv->getConfiguration());
@@ -56,7 +57,7 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
         $dest = 'Hello.pdf';
 
         $rand = mt_rand();
-        $process = $this->getProcessMock(true, $rand);
+        $process = $this->createProcessMock(1, true, null, $rand);
         $Unoconv = $this->getUnoconv($process, array(
             '--format=pdf',
             '--stdout',
@@ -75,7 +76,7 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
         $dest = 'Hello.pdf';
 
         $rand = mt_rand();
-        $process = $this->getProcessMock(true, $rand);
+        $process = $this->createProcessMock(1, true, null, $rand);
         $Unoconv = $this->getUnoconv($process, array(
             '--format=pdf',
             '--stdout',
@@ -98,7 +99,7 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
     {
         $dest = '/tmp/' . mt_rand(10000, 99999) . '/Hello.pdf';
 
-        $process = $this->getProcessMock(true);
+        $process = $this->createProcessMock(1, true);
         $Unoconv = $this->getUnoconv($process, array(
             '--format=pdf',
             '--stdout',
@@ -145,9 +146,9 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
 
     private function getUnoconv($process, $args)
     {
-        $factory = $this->getMock('Alchemy\BinaryDriver\ProcessBuilderFactoryInterface');
-        $configuration = $this->getMock('Alchemy\BinaryDriver\ConfigurationInterface');
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $factory = $this->createProcessBuilderFactoryMock();
+        $configuration = $this->createConfigurationMock();
+        $logger = $this->createLoggerMock();
 
         $unoconv = new Unoconv($factory, $logger, $configuration);
         $unoconv
@@ -158,28 +159,6 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($process));
 
         return $unoconv;
-    }
-
-    private function getProcessMock($successful = true, $output = false)
-    {
-        $process = $this->getMockBuilder('Symfony\Component\Process\Process')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $process->expects($this->once())
-            ->method('isSuccessful')
-            ->will($this->returnValue($successful));
-
-        if ($output) {
-            $process->expects($this->once())
-                ->method('getOutput')
-                ->will($this->returnValue($output));
-        } else {
-            $process->expects($this->never())
-                ->method('getOutput');
-        }
-
-        return $process;
     }
 }
 
