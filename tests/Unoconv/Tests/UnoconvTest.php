@@ -131,19 +131,6 @@ class UnoconvTest extends BinaryDriverTestCase
         $unoconv->transcode(__DIR__ . '/../../files/Hello.odt', 'pdf', 'Hello.pdf');
     }
 
-    public function testCustomBinary()
-    {
-        $finder = new ExecutableFinder();
-
-        if (null === $binary = $finder->find('unoconv')) {
-            $this->markTestSkipped('Unable to find unoconv binary');
-        }
-
-        $unoconv = Unoconv::create($binary);
-        $this->assertInstanceOf('Unoconv\Unoconv', $unoconv);
-        $this->assertEquals($binary, $unoconv->getProcessBuilderFactory()->getBinary());
-    }
-
     private function getUnoconv($process, $args)
     {
         $factory = $this->createProcessBuilderFactoryMock();
