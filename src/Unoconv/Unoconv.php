@@ -12,6 +12,7 @@
 namespace Unoconv;
 
 use Alchemy\BinaryDriver\AbstractBinary;
+use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use Psr\Log\LoggerInterface;
 use Unoconv\Exception\RuntimeException;
 use Unoconv\Exception\InvalidFileArgumentException;
@@ -20,7 +21,28 @@ class Unoconv extends AbstractBinary
 {
     const FORMAT_PDF = 'pdf';
 
-    public function transcode($input, $format, $output, $pageRange = null)
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'Unoconv';
+    }
+
+    /**
+     * Transcodes a file to another format
+     *
+     * @param string $input      The path to the input file
+     * @param string $format     The output format
+     * @param string $outputFile The path to the output file
+     * @param string $pageRange  The range of pages. 1-14 for pages 1 to 14
+     *
+     * @return Unoconv
+     *
+     * @throws InvalidFileArgumentException In case the input file is not readable or does not exist
+     * @throws RuntimeException             In case the output file can not be written, or the process failes
+     */
+    public function transcode($input, $format, $outputFile, $pageRange = null)
     {
         if (!file_exists($input)) {
             $this->logger->error(sprintf('RUnoconv failed to open %s', $input));
@@ -39,29 +61,31 @@ class Unoconv extends AbstractBinary
 
         $arguments[] = $input;
 
-        $process = $this->factory->create($arguments);
-
-        $this->logger->info(sprintf('Executing unoconv command %s', $process->getCommandline()));
-
         try {
-            $process->run();
-        } catch (\RuntimeException $e) {
-            throw new RuntimeException('Unable to execute unoconv command', $e->getCode(), $e);
+            $output = $this->run($this->factory->create($arguments));
+        } catch (ExecutionFailureException $e) {
+            throw new RuntimeException(
+                'Unoconv failed to transcode file', $e->getCode(), $e
+            );
         }
 
-        if (!$process->isSuccessful()) {
+        if (!is_writable(dirname($outputFile)) || !file_put_contents($outputFile, $output)) {
             throw new RuntimeException(sprintf(
-                'Unable to execute unoconv, command %s failed', $process->getCommandLine()
+                'Unable to write to output file `%s`', $outputFile
             ));
-        }
-
-        if (!is_writable(dirname($output)) || !file_put_contents($output, $process->getOutput())) {
-            throw new RuntimeException(sprintf('Unable to write to output file `%s`', $output));
         }
 
         return $this;
     }
 
+    /**
+     * Creates an Unoconv instance
+     *
+     * @param LoggerInterface              $logger
+     * @param array|ConfigurationInterface $conf
+     *
+     * @return Unoconv
+     */
     public static function create(LoggerInterface $logger = null, $conf = array())
     {
         return static::load('unoconv', $logger, $conf);
