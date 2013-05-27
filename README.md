@@ -4,6 +4,18 @@
 
 An Object Oriented library which allow easy to use file conversion with Unoconv.
 
+## Install
+
+The recommended way to install PHP-Unoconv is [through composer](http://getcomposer.org).
+
+```JSON
+{
+    "require": {
+        "php-unoconv/php-unoconv": "~0.2"
+    }
+}
+```
+
 ## Documentation
 
 Documentation available at http://php-unoconv.readthedocs.org/
