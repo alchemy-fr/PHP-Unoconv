@@ -33,10 +33,14 @@ configuration options.
 
 Available options are :
 
- - timeout : the timeout for the underlying process
+ - `timeout` : the timeout for the underlying process.
+ - `unoconv.binaries` : the path (or an array of paths) for a custom binary.
 
 ```php
-$unoconv = Unoconv\Unoconv::create($logger, array('timeout' => 42));
+$unoconv = Unoconv\Unoconv::create(array(
+    'timeout'          => 42,
+    'unoconv.binaries' => '/opt/local/unoconv/bin/unoconv',
+), $logger);
 ```
 
 To transcode a file, use the `transcode` method. For the complete format list
@@ -61,9 +65,13 @@ are optionals :
 ```php
 $app = new Silex\Application();
 $app->register(new Unoconv\UnoconvServiceProvider(), array(
-    'unoconv.logger'  => $app->share(function () { return $app['monolog']; }), // use Monolog service provider
-    'unoconv.binary'  => '/path/to/custom/binary',
-    'unoconv.timeout' => 42,
+    'unoconv.configuration' => array(
+        'unoconv.binaries' => '/opt/local/unoconv/bin/unoconv',
+        'timeout'          => 42,
+    ),
+    'unoconv.logger'  => $app->share(function () {
+        return $app['monolog']; // use Monolog service provider
+    }),
 ));
 ```
 

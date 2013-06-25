@@ -33,7 +33,7 @@ class UnoconvTest extends BinaryDriverTestCase
 
         $logger = $this->createLoggerMock();
 
-        $unoconv = Unoconv::create($logger);
+        $unoconv = Unoconv::create(array(), $logger);
         $this->assertEquals($logger, $unoconv->getLogger());
     }
 
@@ -48,7 +48,7 @@ class UnoconvTest extends BinaryDriverTestCase
 
         $conf = $this->createConfigurationMock();
 
-        $unoconv = Unoconv::create(null, $conf);
+        $unoconv = Unoconv::create($conf);
         $this->assertEquals($conf, $unoconv->getConfiguration());
     }
 

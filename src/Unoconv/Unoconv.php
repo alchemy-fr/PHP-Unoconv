@@ -12,6 +12,8 @@
 namespace Unoconv;
 
 use Alchemy\BinaryDriver\AbstractBinary;
+use Alchemy\BinaryDriver\Configuration;
+use Alchemy\BinaryDriver\ConfigurationInterface;
 use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use Psr\Log\LoggerInterface;
 use Unoconv\Exception\RuntimeException;
@@ -45,7 +47,7 @@ class Unoconv extends AbstractBinary
     public function transcode($input, $format, $outputFile, $pageRange = null)
     {
         if (!file_exists($input)) {
-            $this->logger->error(sprintf('RUnoconv failed to open %s', $input));
+            $this->logger->error(sprintf('Unoconv failed to open %s', $input));
             throw new InvalidFileArgumentException(sprintf('File %s does not exists', $input));
         }
 
@@ -62,7 +64,7 @@ class Unoconv extends AbstractBinary
         $arguments[] = $input;
 
         try {
-            $output = $this->run($this->factory->create($arguments));
+            $output = $this->command($arguments);
         } catch (ExecutionFailureException $e) {
             throw new RuntimeException(
                 'Unoconv failed to transcode file', $e->getCode(), $e
@@ -86,8 +88,14 @@ class Unoconv extends AbstractBinary
      *
      * @return Unoconv
      */
-    public static function create(LoggerInterface $logger = null, $conf = array())
+    public static function create($conf = array(), LoggerInterface $logger = null)
     {
-        return static::load('unoconv', $logger, $conf);
+        if (!$conf instanceof ConfigurationInterface) {
+            $conf = new Configuration($conf);
+        }
+
+        $binaries = $conf->get('unoconv.binaries', array('unoconv'));
+
+        return static::load($binaries, $logger, $conf);
     }
 }

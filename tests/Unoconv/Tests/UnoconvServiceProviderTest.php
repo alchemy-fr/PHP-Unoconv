@@ -42,14 +42,16 @@ class UnoconvServiceProvoderTest extends \PHPUnit_Framework_TestCase
 
         $app = $this->getApplication();
         $app->register(new UnoconvServiceProvider(), array(
-            'unoconv.binary' => $php,
+            'unoconv.configuration' => array(
+                'unoconv.binaries' => $php,
+                'timeout'          => 42,
+            ),
             'unoconv.logger' => $logger,
-            'unoconv.timeout' => 42
         ));
 
         $this->assertInstanceOf('\Unoconv\Unoconv', $app['unoconv']);
         $this->assertEquals($php, $app['unoconv']->getProcessBuilderFactory()->getBinary());
         $this->assertEquals(42, $app['unoconv']->getProcessBuilderFactory()->getTimeout());
-        $this->assertEquals($logger, $app['unoconv']->getLogger());
+        $this->assertEquals($logger, $app['unoconv']->getProcessRunner()->getLogger());
     }
 }

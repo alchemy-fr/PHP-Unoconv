@@ -18,23 +18,19 @@ class UnoconvServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {
-        $app['unoconv.binary'] = null;
+        $app['unoconv.default.configuration'] = array(
+            'unoconv.binaries' => array('unoconv'),
+            'timeout'          => 120,
+        );
+        $app['unoconv.configuration'] = array();
         $app['unoconv.logger'] = null;
-        $app['unoconv.timeout'] = 0;
 
         $app['unoconv'] = $app->share(function(Application $app) {
+            $app['unoconv.configuration'] = array_replace(
+                $app['unoconv.default.configuration'], $app['unoconv.configuration']
+            );
 
-            if ($app['unoconv.logger']) {
-                $logger = $app['unoconv.logger'];
-            } else {
-                $logger = null;
-            }
-
-            if (null === $app['unoconv.binary']) {
-                return Unoconv::create($logger, array('timeout' => $app['unoconv.timeout']));
-            } else {
-                return Unoconv::load($app['unoconv.binary'], $logger, array('timeout' => $app['unoconv.timeout']));
-            }
+            return Unoconv::create($app['unoconv.configuration'], $app['unoconv.logger']);
         });
     }
 
