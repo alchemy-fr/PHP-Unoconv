@@ -1,6 +1,11 @@
 CHANGELOG
 ---------
 
+* 0.3.0 (06-25-2013)
+
+  * BC Break : Switch of Unoconv::create arguments.
+  * BC Break : Service provider configuration has been simplified.
+
 * 0.2.0 (04-26-2013)
 
   * Use alchemy/binary-driver as base for driver
