@@ -47,7 +47,6 @@ class Unoconv extends AbstractBinary
     public function transcode($input, $format, $outputFile, $pageRange = null)
     {
         if (!file_exists($input)) {
-            $this->logger->error(sprintf('Unoconv failed to open %s', $input));
             throw new InvalidFileArgumentException(sprintf('File %s does not exists', $input));
         }
 

@@ -131,6 +131,19 @@ class UnoconvTest extends BinaryDriverTestCase
         $unoconv->transcode(__DIR__ . '/../../files/Hello.odt', 'pdf', 'Hello.pdf');
     }
 
+    /**
+     * @expectedException \Unoconv\Exception\InvalidFileArgumentException
+     */
+    public function testTranscodeWithInvalidFile()
+    {
+        $factory = $this->createProcessBuilderFactoryMock();
+        $configuration = $this->createConfigurationMock();
+        $logger = $this->createLoggerMock();
+
+        $unoconv = new Unoconv($factory, $logger, $configuration);
+        $unoconv->transcode('/path/to/nofile', 'pdf', 'hello.pdf');
+    }
+
     private function getUnoconv($process, $args)
     {
         $factory = $this->createProcessBuilderFactoryMock();
