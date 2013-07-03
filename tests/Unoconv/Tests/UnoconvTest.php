@@ -3,6 +3,7 @@
 namespace Unoconv\Tests;
 
 use Alchemy\BinaryDriver\BinaryDriverTestCase;
+use Alchemy\BinaryDriver\Configuration;
 use Unoconv\Unoconv;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
@@ -46,7 +47,7 @@ class UnoconvTest extends BinaryDriverTestCase
             $this->markTestSkipped('Unable to detect unoconv, mandatory for this test');
         }
 
-        $conf = $this->createConfigurationMock();
+        $conf = new Configuration(array('unoconv.binaries' => $unoconv));
 
         $unoconv = Unoconv::create($conf);
         $this->assertEquals($conf, $unoconv->getConfiguration());
