@@ -78,3 +78,7 @@ $app->register(new Unoconv\UnoconvServiceProvider(), array(
 ## License
 
 Released under the MIT license
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/alchemy-fr/php-unoconv/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
