@@ -4,8 +4,9 @@ namespace Unoconv\Tests\Functional;
 
 use Unoconv\Unoconv;
 use Symfony\Component\Process\ExecutableFinder;
+use PHPUnit\Framework\TestCase;
 
-class UnoconvTest extends \PHPUnit_Framework_TestCase
+class UnoconvTest extends TestCase
 {
     public function setUp()
     {

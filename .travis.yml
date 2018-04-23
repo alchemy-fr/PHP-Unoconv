@@ -2,15 +2,15 @@ language: php
 
 before_script:
   - sudo apt-get update
-  - sudo apt-get install -y openoffice.org openoffice.org-writer unoconv
+  - sudo apt-get install -y unoconv
+  - mkdir -p ~/.config/libreoffice/4/user/extensions && touch ~/.config/libreoffice/4/user/extensions/buildid && echo '420m0(Build:2)' >> ~/.config/libreoffice/4/user/extensions/buildid
   - composer install --dev --prefer-source
 
 php:
-  - 5.3.3
-  - 5.3
-  - 5.4
-  - 5.5
+  - 7.0
+  - 7.1
+  - 7.2
 
 script:
-  - phpunit --coverage-text
-  - phpunit -c phpunit-functional.xml.dist
+  - vendor/bin/phpunit --coverage-text
+  - vendor/bin/phpunit -c phpunit-functional.xml.dist

@@ -5,8 +5,9 @@ namespace Unoconv\Tests;
 use Unoconv\UnoconvServiceProvider;
 use Silex\Application;
 use Symfony\Component\Process\ExecutableFinder;
+use PHPUnit\Framework\TestCase;
 
-class UnoconvServiceProvoderTest extends \PHPUnit_Framework_TestCase
+class UnoconvServiceProvoderTest extends TestCase
 {
     private function getApplication()
     {
@@ -38,7 +39,7 @@ class UnoconvServiceProvoderTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Unable to detect unoconv, mandatory for this test');
         }
 
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock('Psr\Log\LoggerInterface');
 
         $app = $this->getApplication();
         $app->register(new UnoconvServiceProvider(), array(
