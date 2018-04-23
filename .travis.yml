@@ -2,7 +2,8 @@ language: php
 
 before_script:
   - sudo apt-get update
-  - sudo apt-get install -y libreoffice unoconv
+  - sudo apt-get install -y unoconv
+  - mkdir -p ~/libreoffice/4/user/extensions && touch ~/libreoffice/4/user/extensions/buildid && echo '420m0(Build:2)' >> ~/libreoffice/4/user/extensions/buildid
   - composer install --dev --prefer-source
 
 php:
