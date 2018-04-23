@@ -12,5 +12,5 @@ php:
   - 7.2
 
 script:
-  - phpunit --coverage-text
-  - phpunit -c phpunit-functional.xml.dist
+  - vendor/bin/phpunit --coverage-text
+  - vendor/bin/phpunit -c phpunit-functional.xml.dist
