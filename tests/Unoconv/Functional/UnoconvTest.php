@@ -38,4 +38,15 @@ class UnoconvTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists($dest));
         unlink($dest);
     }
+
+    public function testOdtToPDFConversionWithOtherPort()
+    {
+        $dest = 'Hello.pdf';
+
+        $unoconv = Unoconv::create(array('unoconv.port' => 2003));
+        $unoconv->transcode(__DIR__ . '/../../files/Hello.odt', 'pdf', $dest);
+
+        $this->assertTrue(file_exists($dest));
+        unlink($dest);
+    }
 }

@@ -55,6 +55,10 @@ class Unoconv extends AbstractBinary
             '--stdout'
         );
 
+        if ($port = $this->configuration->get('unoconv.port')) {
+            $arguments[] = '--port=' . $port;
+        }
+
         if (preg_match('/\d+-\d+/', $pageRange)) {
             $arguments[] = '-e';
             $arguments[] = 'PageRange=' . $pageRange;
