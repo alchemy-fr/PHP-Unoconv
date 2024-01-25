@@ -18,7 +18,7 @@
     ],
     "require": {
         "php"                   : ">=5.3.3",
-        "alchemy/binary-driver" : "~1.5"
+        "alchemy/binary-driver" : "~1.5|^5.2"
     },
     "require-dev": {
         "phpunit/phpunit"       : "~3.7",
